@@ -2583,8 +2583,8 @@ GameObject:
   - component: {fileID: 552891759}
   - component: {fileID: 552891758}
   - component: {fileID: 552891757}
-  - component: {fileID: 552891756}
   - component: {fileID: 552891760}
+  - component: {fileID: 552891756}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2691,6 +2691,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_RotationMultiplier: 360
+  m_MoveSpeed: 15
+  m_MoveStep: 3
+  m_MoveCooldown: 0.1
 --- !u!1 &556852291
 GameObject:
   m_ObjectHideFlags: 0

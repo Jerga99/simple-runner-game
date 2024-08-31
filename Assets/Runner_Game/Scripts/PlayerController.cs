@@ -11,20 +11,30 @@ public class PlayerController : MonoBehaviour
     private float m_MoveStep;
     [SerializeField]
     private float m_MoveCooldown = 0.1f;
+    [Header("Jumping")]
+    [SerializeField]
+    private float m_Gravity = -9.81f;
+    [SerializeField]
+    private float m_JumpForce = 10.0f;
     private float[] m_Lanes;
     private float m_TargetPositionX;
     private float m_NextAllowedMovement = 0f;
+    private float m_VerticalVelocity;
+    private Vector3 m_InitialPosition;
+    private bool m_IsGrounded = true;
 
     void Start()
     {
         float middleX = m_TargetPositionX = transform.position.x;
         m_Lanes = new float[] { middleX - m_MoveStep, middleX, middleX + m_MoveStep };
+        m_InitialPosition = transform.position;
     }
 
     void Update()
     {
         HandleRotation();
         HandleMovement();
+        HandleJumping();
 
         var newPosition = new Vector3(m_TargetPositionX, transform.position.y, transform.position.z);
         transform.position = Vector3.MoveTowards(transform.position, newPosition, m_MoveSpeed * Time.deltaTime);
@@ -48,6 +58,26 @@ public class PlayerController : MonoBehaviour
             {
                 MoveToLane(+1);
             }
+        }
+    }
+
+    void HandleJumping()
+    {
+        if (m_IsGrounded && (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow)))
+        {
+            m_VerticalVelocity = m_JumpForce;
+            m_IsGrounded = false;
+        }
+
+        // Applying Gravity
+        m_VerticalVelocity += m_Gravity * Time.deltaTime;
+        transform.position += new Vector3(0, m_VerticalVelocity * Time.deltaTime, 0);
+
+        // Checking if we are grounded
+        if (transform.position.y <= m_InitialPosition.y) {
+            m_IsGrounded = true;
+            m_VerticalVelocity = 0;
+            transform.position = new Vector3(transform.position.x, m_InitialPosition.y, transform.position.z);
         }
     }
 

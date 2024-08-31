@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,8 +16,14 @@ public class GameManager : MonoBehaviour
     private Transform m_DespawnPosition;
     [SerializeField]
     private float m_BaseSpeed = 1.0f;
+    [Header("Player")]
+    [SerializeField]
+    private int m_PlayerLifeCount = 3;
+    [SerializeField]
+    private TextMeshProUGUI m_PlayerHealthText;
     private Transform[] m_Movables;
     private List<Obstacle> m_ActiveSpawns = new();
+    private int m_PlayerCurrentLife;
 
     void Start()
     {
@@ -28,6 +36,8 @@ public class GameManager : MonoBehaviour
         }
 
         m_SpawnConfigSO.Init();
+        m_PlayerCurrentLife = m_PlayerLifeCount;
+        m_PlayerHealthText.text = $"{m_PlayerCurrentLife}/{m_PlayerLifeCount}";
     }
 
     void Update()
@@ -62,11 +72,6 @@ public class GameManager : MonoBehaviour
     {
         foreach (var spawnable in m_SpawnConfigSO.Spawnables)
         {
-            // var spawn = spawnable.Spawn(ChooseSpawnPosition());
-            // if (spawn != null) {
-            //     m_ActiveSpawns.Add(spawn);
-            // }
-
             if (spawnable.Spawn(ChooseSpawnPosition(), out var spawn)) {
                 m_ActiveSpawns.Add(spawn);
             }
@@ -95,5 +100,20 @@ public class GameManager : MonoBehaviour
         var yPosition = yPositions[UnityEngine.Random.Range(0, yPositions.Length)];
 
         return new Vector3(xPosition, yPosition, m_SpawnPosition.position.z);
+    }
+
+    private void Despawn(Obstacle obstacle) {
+        m_ActiveSpawns.Remove(obstacle);
+        Destroy(obstacle.gameObject);
+    }
+
+    public void OnPlayerGotHit(Obstacle source) {
+        m_PlayerCurrentLife -= source.Damage;
+        m_PlayerHealthText.text = $"{m_PlayerCurrentLife}/{m_PlayerLifeCount}";
+        Despawn(source);
+
+        if (m_PlayerCurrentLife == 0) {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
     }
 }

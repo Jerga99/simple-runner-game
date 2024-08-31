@@ -25,9 +25,11 @@ public class PlayerController : MonoBehaviour
     private bool m_IsMovingHorizontaly = false;
     private float m_TargetRotationX;
     private float m_TargetRotationY;
+    private GameManager m_GameManager;
 
     void Start()
     {
+        m_GameManager = FindObjectOfType<GameManager>();
         float middleX = m_TargetPositionX = transform.position.x;
         m_Lanes = new float[] { middleX - m_MoveStep, middleX, middleX + m_MoveStep };
         m_InitialPosition = transform.position;
@@ -118,5 +120,12 @@ public class PlayerController : MonoBehaviour
 
         m_NextAllowedMovement = Time.time + m_MoveCooldown;
         m_IsMovingHorizontaly = true;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.TryGetComponent<Obstacle>(out var obstacle)) {
+            m_GameManager.OnPlayerGotHit(obstacle);
+        }
     }
 }

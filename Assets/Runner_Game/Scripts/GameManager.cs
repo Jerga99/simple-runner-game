@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private float m_BaseSpeed = 1.0f;
     private Transform[] m_Movables;
+    private List<Obstacle> m_ActiveSpawns = new();
 
     void Start()
     {
@@ -30,6 +31,13 @@ public class GameManager : MonoBehaviour
     }
 
     void Update()
+    {
+        HandleMovables();
+        HandleSpawning();
+        GarbageCollector();
+    }
+
+    private void HandleMovables()
     {
         foreach (var movable in m_Movables)
         {
@@ -48,16 +56,40 @@ public class GameManager : MonoBehaviour
                 );
             }
         }
+    }
 
+    private void HandleSpawning()
+    {
         foreach (var spawnable in m_SpawnConfigSO.Spawnables)
         {
-            spawnable.Spawn(ChooseSpawnPosition());
+            // var spawn = spawnable.Spawn(ChooseSpawnPosition());
+            // if (spawn != null) {
+            //     m_ActiveSpawns.Add(spawn);
+            // }
+
+            if (spawnable.Spawn(ChooseSpawnPosition(), out var spawn)) {
+                m_ActiveSpawns.Add(spawn);
+            }
+
         }
     }
 
-    private Vector3 ChooseSpawnPosition() {
-        var xPositions = new float[] {-3.5f, -0.5f, 2.5f};
-        var yPositions = new float[] {0.5f, 3f};
+    private void GarbageCollector()
+    {
+        for (int i = 0; i < m_ActiveSpawns.Count; i++) {
+            var spawn = m_ActiveSpawns[i];
+
+            if (spawn.transform.position.z <= m_DespawnPosition.position.z) {
+                m_ActiveSpawns.RemoveAt(i);
+                Destroy(spawn.gameObject);
+            }
+        }
+    }
+
+    private Vector3 ChooseSpawnPosition()
+    {
+        var xPositions = new float[] { -3.5f, -0.5f, 2.5f };
+        var yPositions = new float[] { 0.5f, 3f };
 
         var xPosition = xPositions[UnityEngine.Random.Range(0, xPositions.Length)];
         var yPosition = yPositions[UnityEngine.Random.Range(0, yPositions.Length)];

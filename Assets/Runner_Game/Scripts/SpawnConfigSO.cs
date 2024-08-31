@@ -27,6 +27,19 @@ class Spawnable
         return null;
     }
 
+    public bool Spawn(Vector3 position, out Obstacle spawn)
+    {
+        if (Time.time > m_SpawnTimer)
+        {
+            m_SpawnTimer = Time.time + m_SpawnInterval;
+            spawn = UnityEngine.Object.Instantiate(m_ObstaclePrefab, position, Quaternion.identity);
+            return true;
+        }
+
+        spawn = null;
+        return false;
+    }
+
 }
 
 [CreateAssetMenu(menuName = "Game/New Spawn Config", fileName = "SpawnConfigSO")]

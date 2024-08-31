@@ -22,6 +22,9 @@ public class PlayerController : MonoBehaviour
     private float m_VerticalVelocity;
     private Vector3 m_InitialPosition;
     private bool m_IsGrounded = true;
+    private bool m_IsMovingHorizontaly = false;
+    private float m_TargetRotationX;
+    private float m_TargetRotationY;
 
     void Start()
     {
@@ -36,6 +39,11 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         HandleJumping();
 
+        if (Mathf.Approximately(transform.position.x, m_TargetPositionX))
+        {
+            m_IsMovingHorizontaly = false;
+        }
+
         var newPosition = new Vector3(m_TargetPositionX, transform.position.y, transform.position.z);
         transform.position = Vector3.MoveTowards(transform.position, newPosition, m_MoveSpeed * Time.deltaTime);
     }
@@ -43,7 +51,20 @@ public class PlayerController : MonoBehaviour
     void HandleRotation()
     {
         float rotationAmount = m_RotationMultiplier * Time.deltaTime;
-        transform.Rotate(Vector3.right, rotationAmount);
+
+        if (m_IsMovingHorizontaly)
+        {
+            m_TargetRotationX = 0f;
+            m_TargetRotationY += rotationAmount;
+        }
+        else
+        {
+            m_TargetRotationY = 0f;
+            m_TargetRotationX += rotationAmount;
+        }
+
+        Quaternion targetRotation = Quaternion.Euler(m_TargetRotationX, m_TargetRotationY, 0);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationAmount);
     }
 
     void HandleMovement()
@@ -74,7 +95,8 @@ public class PlayerController : MonoBehaviour
         transform.position += new Vector3(0, m_VerticalVelocity * Time.deltaTime, 0);
 
         // Checking if we are grounded
-        if (transform.position.y <= m_InitialPosition.y) {
+        if (transform.position.y <= m_InitialPosition.y)
+        {
             m_IsGrounded = true;
             m_VerticalVelocity = 0;
             transform.position = new Vector3(transform.position.x, m_InitialPosition.y, transform.position.z);
@@ -95,5 +117,6 @@ public class PlayerController : MonoBehaviour
         }
 
         m_NextAllowedMovement = Time.time + m_MoveCooldown;
+        m_IsMovingHorizontaly = true;
     }
 }

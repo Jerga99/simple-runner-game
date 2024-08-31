@@ -17,7 +17,7 @@ RenderSettings:
   m_Fog: 1
   m_FogColor: {r: 0.5977661, g: 0.79333436, b: 0.9528302, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.02
+  m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 4f45823c8cc874cfd93995b56f0cdcdb, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3.47
@@ -1436,7 +1436,7 @@ Transform:
   m_GameObject: {fileID: 330942031}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -1, y: 0, z: 145}
+  m_LocalPosition: {x: -1, y: -0.09, z: 145}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2825,9 +2825,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_RotationMultiplier: 500
-  m_MoveSpeed: 30
+  m_MoveSpeed: 40
   m_MoveStep: 3
-  m_MoveCooldown: 0.1
+  m_MoveCooldown: 0.09
   m_Gravity: -400
   m_JumpForce: 70
 --- !u!1 &556852291
@@ -4102,7 +4102,7 @@ Transform:
   m_GameObject: {fileID: 703662040}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -1, y: 0, z: 70}
+  m_LocalPosition: {x: -1, y: -0.09, z: 70}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

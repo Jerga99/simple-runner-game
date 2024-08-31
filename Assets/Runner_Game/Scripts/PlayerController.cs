@@ -91,6 +91,10 @@ public class PlayerController : MonoBehaviour
             m_VerticalVelocity = m_JumpForce;
             m_IsGrounded = false;
         }
+        else if (!m_IsGrounded && (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)))
+        {
+            m_VerticalVelocity = m_Gravity / 3;
+        }
 
         // Applying Gravity
         m_VerticalVelocity += m_Gravity * Time.deltaTime;
@@ -124,7 +128,8 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent<Obstacle>(out var obstacle)) {
+        if (other.TryGetComponent<Obstacle>(out var obstacle))
+        {
             m_GameManager.OnPlayerGotHit(obstacle);
         }
     }
